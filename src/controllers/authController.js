@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 // response(res): se usa para enviar la respuesta al cliente
 module.exports.login = async(req,res) =>{
 
-    const {username,password} = req.body // destructuracion de objeto
+    const {username,password } = req.body // destructuracion de objeto
     try {
         const results = await User.findByUsername(username); // pasando al usermodel y ejecutando la consulta
 

@@ -1,8 +1,15 @@
 // CONFIGURANDO EL SERVIDOR CON EXPRESS
 const express = require('express');
 require('dotenv').config(); 
+// CONFIGURACION DE RUTAS
+const authRoutes = require('./src/routes/authRoutes');
+
 
 const server = express(); // configurando el servidor para las peticiones HTTP
+server.use(express.json()); // leer json del body (Middleware para datos JSON)
+server.use(express.urlencoded({extended:true})) //formulario codificado (Middlware para formulario de HTML)
+server.use('/auth',authRoutes) //  http://localhost:3000/api/auth
+
 
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, ()=>{
