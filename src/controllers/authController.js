@@ -13,7 +13,8 @@ module.exports.login = async(req,res) =>{
             const isMatch = await bcrypt.compare(password,user.password) // true o false
             if(isMatch){
                 return res.status(200).json({
-                    message: "Usuario autenticado con éxito."
+                    message: "Usuario autenticado con éxito.",
+                    data:user
                 })
             }else{
                 return res.status(401).json({
