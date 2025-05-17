@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config(); 
 // CONFIGURACION DE RUTAS
 const authRoutes = require('./src/routes/authRoutes');
+const categoryRoutes = require('./src/routes/categoryRoutes');
 
 const server = express(); // configurando el servidor para las peticiones HTTP
 server.use(cors())
@@ -12,6 +13,7 @@ server.use(express.urlencoded({extended:true})) //formulario codificado (Middlwa
 
 // LAS RUTAS PRINCIPALES
 server.use('/auth',authRoutes) //  http://localhost:3000/api/auth
+server.use('/categories',categoryRoutes); // http://localhost:3000/api/categories
 
 
 const PORT = process.env.PORT || 8000;
