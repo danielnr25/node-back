@@ -20,8 +20,8 @@ const Product = {
     // Crear un nuevo producto
     create: async (name, description, price, category_id, image_url) => {
         try {
-            const [results] = await database.query("INSERT INTO productos(nombre, precio, descripcion,imagen, category_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
-                [name, description, price,image_url,category_id] // Se almacena la URL de la imagen
+            const [results] = await database.query("INSERT INTO productos(nombre, precio, descripcion,imagen, categoria_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
+                [name,price,description,image_url,category_id] // Se almacena la URL de la imagen
             );
             return results; // Retorna los resultados de la inserción
         } catch (error) {
@@ -30,7 +30,7 @@ const Product = {
     },
     update: async (id, name, description, price, category_id, image_url) => {
         try {
-            const [results] = await database.query("UPDATE productos SET nombre = ?, precio = ?, descripcion = ?, image = ?,category_id = ?, updated_at = NOW() WHERE id = ?",
+            const [results] = await database.query("UPDATE productos SET nombre = ?, precio = ?, descripcion = ?, imagen = ?,categoria_id = ?, updated_at = NOW() WHERE id = ?",
                 [name, price, description,image_url,category_id,id]
             );
             

@@ -30,7 +30,7 @@ const CategoryController = {
 
         try {
             const newCategory = await Category.create(name, description); // Llamamos al modelo para crear la categoría
-            res.status(201).json({ message: 'Categoría creada exitosamente', newCategory }); // Respondemos con éxito
+            res.status(201).json({ message: 'Categoría creada exitosamente'}); // Respondemos con éxito
         } catch (error) {
             res.status(500).json({ message: 'Error al crear la categoría', error }); // Manejo de errores
         }
