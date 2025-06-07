@@ -11,7 +11,7 @@ const Product = {
     },
     findById: async (id) => {
         try {
-            const [results] = await database.query("SELECT pr.nombre,pr.id,pr.precio,pr.descripcion,pr.imagen,cp.nombre as categorianombre FROM `productos` pr LEFT JOIN categorias_productos cp ON pr.categoria_id = cp.id WHERE pr.id = ? AND pr.deleted_at IS NULL", [id]); // Traemos el producto por su ID
+            const [results] = await database.query("SELECT pr.nombre,pr.id,pr.precio,pr.descripcion,pr.imagen,cp.nombre as categorianombre,pr.categoria_id FROM `productos` pr LEFT JOIN categorias_productos cp ON pr.categoria_id = cp.id WHERE pr.id = ? AND pr.deleted_at IS NULL", [id]); // Traemos el producto por su ID
             return results;
         } catch (error) {
             throw error; // Si hay un error lo lanzamos

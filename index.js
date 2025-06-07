@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config(); 
+const path = require('path')
 // CONFIGURACION DE RUTAS
 const authRoutes = require('./src/routes/authRoutes');
 const categoryRoutes = require('./src/routes/categoryRoutes');
@@ -16,7 +17,7 @@ server.use(express.urlencoded({extended:true})) //formulario codificado (Middlwa
 server.use('/api/auth',authRoutes) //  http://localhost:3000/api/auth
 server.use('/api/categories',categoryRoutes); // http://localhost:3000/api/categories
 server.use('/api/products',productRoutes); // http://localhost:3000/api/products 
-
+server.use('/uploads', express.static(path.join(__dirname,'src','uploads'))); // Servir archivos estáticos desde la carpeta 'uploads'
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, ()=>{
     console.log(`Servidor en el puerto: http://localhost:${PORT}`);   

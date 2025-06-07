@@ -4,7 +4,12 @@ const ProductController = {
     getAllProducts: async (req, res) => {
         try {
             const products = await Product.getAll(); // Llamamos al modelo para obtener todos los productos
-            res.status(200).json(products); // Respondemos con los productos en formato JSON
+            const listProducts = products.map((product)=>({
+               ...product,
+               imagen: process.env.HOST + '/uploads/' + product.imagen
+            }));
+            
+            res.status(200).json(listProducts); // Respondemos con los productos en formato JSON
         } catch (error) {
             res.status(500).json({ message: 'Error al obtener los productos', error }); // Manejo de errores
         }
@@ -16,7 +21,11 @@ const ProductController = {
             if (product.length === 0) {
                 return res.status(404).json({ message: 'Producto no encontrado' }); // Si no se encuentra, respondemos con 404
             }
-            res.status(200).json(product[0]); // Respondemos con el producto encontrado
+            const updatedProduct = {
+               ...product[0],
+               imagen: process.env.HOST + '/uploads/' + product[0].imagen
+           };
+           res.status(200).json(updatedProduct);
         } catch (error) {
             res.status(500).json({ message: 'Error al obtener el producto', error }); // Manejo de errores
         }
@@ -24,7 +33,7 @@ const ProductController = {
      // Crear un nuevo producto
     createProduct: async (req, res) => {
         const { name, description, price, category_id } = req.body; // Obtenemos los datos del cuerpo de la solicitud
-        const image_url = req.file ? `/uploads/${req.file.filename}` : ''; // Obtenemos la URL de la imagen
+        const image_url = req.file ? req.file.filename : '';  // Obtenemos la URL de la imagen
 
         if (!name || !description || !price || !category_id) {
             return res.status(400).json({ message: 'Nombre, descripción, precio y categoría son obligatorios' }); // Validación de datos
@@ -41,18 +50,30 @@ const ProductController = {
     updateProduct: async (req, res) => {
         const { id } = req.params; // Obtenemos el ID de la categoría de los parámetros de la ruta
         const { name, description, price, category_id } = req.body; // Obtenemos los datos del cuerpo de la solicitud
-        const image_url = req.file ? `/uploads/${req.file.filename}` : ''; // Obtenemos la URL de la imagen
-
+        const image_url = req.file ? req.file.filename : null;  // Obtenemos la URL de la imagen
         if (!name || !description || !price || !category_id) {
             return res.status(400).json({ message: 'Nombre, descripción, precio y categoría son obligatorios' }); // Validación de datos
         }
 
         try {
-            const updatedProduct = await Product.update(id, name, description, price, category_id, image_url); // Llamamos al modelo para actualizar el producto
-            if (updatedProduct.affectedRows === 0) {
-                return res.status(404).json({ message: 'Producto no encontrado' }); // Si no se encuentra, respondemos con 404
+
+         const currentProduct = await Product.findById(id);
+            let saveImageUrl = currentProduct[0].imagen; // verificamos si existe una imagen antes de actualizar
+            if(!currentProduct){
+               return res.status(404).json({ message: 'Producto no encontrado' });
             }
-            res.status(200).json({ message: 'Producto actualizado exitosamente', updatedProduct }); // Respondemos con éxito
+         
+         if(image_url !=null){ // verifica si en la actualización de cualquier campo se ha subido una nueva imagen
+            saveImageUrl = image_url;
+         }else{
+            saveImageUrl = currentProduct[0].imagen;
+         }
+
+         const updatedProduct = await Product.update(id, name, description, price, category_id, saveImageUrl); // Llamamos al modelo para actualizar el producto
+         if (updatedProduct.affectedRows === 0) {
+            return res.status(404).json({ message: 'Producto no encontrado' }); // Si no se encuentra, respondemos con 404
+         }
+         res.status(200).json({ message: 'Producto actualizado exitosamente', updatedProduct });
         } catch (error) {
             res.status(500).json({ message: 'Error al actualizar el producto', error }); // Manejo de errores
         }
